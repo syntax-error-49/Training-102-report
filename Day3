@@ -1,0 +1,37 @@
+## Day-03.md
+```markdown
+# Daily Diary - Day 03
+
+## Operators & Control Statements
+
+### Today's Topics
+- Arithmetic Operators
+- Relational Operators
+- Logical Operators
+- If-else statements
+- Switch case
+
+### Practical Work
+- Created calculator using operators
+- Implemented grading system with if-else
+- Built menu-driven program with switch
+- Practiced operator precedence
+
+### Code Example
+```java
+public class OperatorsDemo {
+    public static void main(String[] args) {
+        int a = 10, b = 5;
+        
+        // Arithmetic
+        int sum = a + b;
+        boolean isEqual = (a == b);
+        
+        // Control statements
+        if (a > b) {
+            System.out.println("a is greater");
+        } else {
+            System.out.println("b is greater");
+        }
+    }
+}
