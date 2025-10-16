@@ -1,0 +1,40 @@
+
+## Day-05.md
+```markdown
+# Daily Diary - Day 05
+
+## Arrays
+
+### Today's Topics
+- Single Dimensional Arrays
+- Multi-dimensional Arrays
+- Array Declaration & Initialization
+- Array Operations
+- ArrayIndexOutOfBoundsException
+
+### Practical Work
+- Created arrays of different types
+- Implemented array sorting algorithm
+- Built matrix operations
+- Practiced with command line arguments
+
+### Code Example
+```java
+public class ArraysDemo {
+    public static void main(String[] args) {
+        // Single dimension
+        int[] numbers = {1, 2, 3, 4, 5};
+        
+        // Multi dimension
+        int[][] matrix = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+        
+        // Enhanced for loop
+        for (int num : numbers) {
+            System.out.println(num);
+        }
+    }
+}
