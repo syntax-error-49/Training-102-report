@@ -1,0 +1,48 @@
+# Daily Diary - Day 06
+
+## Methods & Functions
+
+### Today's Topics
+- Method Declaration & Definition
+- Method Parameters & Return Types
+- Method Overloading
+- Recursion Basics
+- Method Calling Stack
+
+### Practical Work
+- Created multiple methods with different return types
+- Implemented method overloading examples
+- Built recursive functions (factorial, Fibonacci)
+- Practiced static vs instance methods
+
+### Code Example
+```java
+public class MethodsDemo {
+    
+    // Simple method
+    public static void greet() {
+        System.out.println("Hello World!");
+    }
+    
+    // Method with parameters and return type
+    public static int add(int a, int b) {
+        return a + b;
+    }
+    
+    // Method overloading
+    public static double add(double a, double b) {
+        return a + b;
+    }
+    
+    // Recursive method
+    public static int factorial(int n) {
+        if (n == 0) return 1;
+        return n * factorial(n - 1);
+    }
+    
+    public static void main(String[] args) {
+        greet();
+        System.out.println("Sum: " + add(5, 3));
+        System.out.println("Factorial: " + factorial(5));
+    }
+}
