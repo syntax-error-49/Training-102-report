@@ -1,0 +1,67 @@
+
+## Day-10.md
+```markdown
+# Daily Diary - Day 10
+
+## Inheritance
+
+### Today's Topics
+- Inheritance Concept
+- extends keyword
+- Method Overriding
+- super keyword
+- Types of Inheritance
+
+### Practical Work
+- Created parent-child class hierarchies
+- Overrode methods in child classes
+- Used super to call parent constructors/methods
+- Implemented IS-A relationship examples
+
+### Code Example
+```java
+// Parent class
+class Animal {
+    String name;
+    
+    public Animal(String name) {
+        this.name = name;
+    }
+    
+    public void eat() {
+        System.out.println(name + " is eating.");
+    }
+    
+    public void sleep() {
+        System.out.println(name + " is sleeping.");
+    }
+}
+
+// Child class
+class Dog extends Animal {
+    String breed;
+    
+    public Dog(String name, String breed) {
+        super(name); // call parent constructor
+        this.breed = breed;
+    }
+    
+    // Method overriding
+    @Override
+    public void eat() {
+        System.out.println(name + " the " + breed + " is eating dog food.");
+    }
+    
+    public void bark() {
+        System.out.println(name + " is barking.");
+    }
+}
+
+public class InheritanceDemo {
+    public static void main(String[] args) {
+        Dog dog = new Dog("Buddy", "Golden Retriever");
+        dog.eat();      // Overridden method
+        dog.sleep();    // Inherited method
+        dog.bark();     // Child class method
+    }
+}
