@@ -1,0 +1,372 @@
+
+## Day-23.md
+```markdown
+# Daily Diary - Day 23
+
+## Mini Project & Review
+
+### Today's Topics
+- Student Management System Implementation
+- Review of Key Java Concepts
+- Project Structure Best Practices
+- Code Organization
+- Future Learning Path
+
+### Practical Work
+- Designed and implemented Student Management System
+- Applied OOP principles
+- Used collections and file handling
+- Implemented CRUD operations
+- Added validation and error handling
+
+### Project Code
+```java
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
+
+// Custom exception for student operations
+class StudentManagementException extends Exception {
+    public StudentManagementException(String message) {
+        super(message);
+    }
+}
+
+// Student class
+class Student implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    private int id;
+    private String name;
+    private int age;
+    private String grade;
+    private double gpa;
+    
+    public Student(int id, String name, int age, String grade, double gpa) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.grade = grade;
+        this.gpa = gpa;
+    }
+    
+    // Getters and setters
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    public String getGrade() { return grade; }
+    public double getGpa() { return gpa; }
+    
+    public void setName(String name) { this.name = name; }
+    public void setAge(int age) { this.age = age; }
+    public void setGrade(String grade) { this.grade = grade; }
+    public void setGpa(double gpa) { this.gpa = gpa; }
+    
+    @Override
+    public String toString() {
+        return String.format("ID: %d, Name: %s, Age: %d, Grade: %s, GPA: %.2f", 
+                           id, name, age, grade, gpa);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Student student = (Student) obj;
+        return id == student.id;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
+
+// Student Management Service
+class StudentManagementService {
+    private Map<Integer, Student> students;
+    private String dataFile;
+    
+    public StudentManagementService(String dataFile) {
+        this.dataFile = dataFile;
+        this.students = new HashMap<>();
+        loadStudentsFromFile();
+    }
+    
+    // CRUD Operations
+    public void addStudent(Student student) throws StudentManagementException {
+        if (students.containsKey(student.getId())) {
+            throw new StudentManagementException("Student with ID " + student.getId() + " already exists");
+        }
+        students.put(student.getId(), student);
+        saveStudentsToFile();
+        System.out.println("Student added successfully: " + student.getName());
+    }
+    
+    public Student getStudent(int id) throws StudentManagementException {
+        Student student = students.get(id);
+        if (student == null) {
+            throw new StudentManagementException("Student with ID " + id + " not found");
+        }
+        return student;
+    }
+    
+    public void updateStudent(int id, String name, int age, String grade, double gpa) 
+            throws StudentManagementException {
+        Student student = getStudent(id);
+        student.setName(name);
+        student.setAge(age);
+        student.setGrade(grade);
+        student.setGpa(gpa);
+        saveStudentsToFile();
+        System.out.println("Student updated successfully: " + student.getName());
+    }
+    
+    public void deleteStudent(int id) throws StudentManagementException {
+        Student student = getStudent(id);
+        students.remove(id);
+        saveStudentsToFile();
+        System.out.println("Student deleted successfully: " + student.getName());
+    }
+    
+    public List<Student> getAllStudents() {
+        return new ArrayList<>(students.values());
+    }
+    
+    // Search operations
+    public List<Student> searchStudentsByName(String name) {
+        return students.values().stream()
+                      .filter(student -> student.getName().toLowerCase().contains(name.toLowerCase()))
+                      .collect(Collectors.toList());
+    }
+    
+    public List<Student> getStudentsByGrade(String grade) {
+        return students.values().stream()
+                      .filter(student -> student.getGrade().equalsIgnoreCase(grade))
+                      .collect(Collectors.toList());
+    }
+    
+    public List<Student> getTopStudents(double minGpa) {
+        return students.values().stream()
+                      .filter(student -> student.getGpa() >= minGpa)
+                      .sorted(Comparator.comparing(Student::getGpa).reversed())
+                      .collect(Collectors.toList());
+    }
+    
+    // Statistics
+    public void displayStatistics() {
+        if (students.isEmpty()) {
+            System.out.println("No students in the system.");
+            return;
+        }
+        
+        DoubleSummaryStatistics stats = students.values().stream()
+                .mapToDouble(Student::getGpa)
+                .summaryStatistics();
+        
+        System.out.println("\n=== Student Statistics ===");
+        System.out.printf("Total Students: %d%n", students.size());
+        System.out.printf("Average GPA: %.2f%n", stats.getAverage());
+        System.out.printf("Highest GPA: %.2f%n", stats.getMax());
+        System.out.printf("Lowest GPA: %.2f%n", stats.getMin());
+        
+        // Grade distribution
+        Map<String, Long> gradeDistribution = students.values().stream()
+                .collect(Collectors.groupingBy(Student::getGrade, Collectors.counting()));
+        
+        System.out.println("\nGrade Distribution:");
+        gradeDistribution.forEach((grade, count) -> 
+            System.out.printf("%s: %d students%n", grade, count));
+    }
+    
+    // File operations
+    @SuppressWarnings("unchecked")
+    private void loadStudentsFromFile() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dataFile))) {
+            students = (Map<Integer, Student>) ois.readObject();
+            System.out.println("Students loaded from file: " + students.size() + " students");
+        } catch (FileNotFoundException e) {
+            System.out.println("No existing data file found. Starting with empty database.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error loading students from file: " + e.getMessage());
+        }
+    }
+    
+    private void saveStudentsToFile() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataFile))) {
+            oos.writeObject(students);
+        } catch (IOException e) {
+            System.out.println("Error saving students to file: " + e.getMessage());
+        }
+    }
+}
+
+// Main application class
+public class StudentManagementSystem {
+    private StudentManagementService service;
+    private Scanner scanner;
+    
+    public StudentManagementSystem() {
+        this.service = new StudentManagementService("students.dat");
+        this.scanner = new Scanner(System.in);
+    }
+    
+    public void start() {
+        System.out.println("=== Student Management System ===");
+        
+        while (true) {
+            displayMenu();
+            int choice = getIntInput("Enter your choice: ");
+            
+            try {
+                switch (choice) {
+                    case 1 -> addStudent();
+                    case 2 -> viewAllStudents();
+                    case 3 -> viewStudent();
+                    case 4 -> updateStudent();
+                    case 5 -> deleteStudent();
+                    case 6 -> searchStudents();
+                    case 7 -> viewStudentsByGrade();
+                    case 8 -> viewTopStudents();
+                    case 9 -> service.displayStatistics();
+                    case 0 -> {
+                        System.out.println("Thank you for using Student Management System!");
+                        return;
+                    }
+                    default -> System.out.println("Invalid choice! Please try again.");
+                }
+            } catch (StudentManagementException e) {
+                System.out.println("Error: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Unexpected error: " + e.getMessage());
+            }
+            
+            System.out.println();
+        }
+    }
+    
+    private void displayMenu() {
+        System.out.println("1. Add Student");
+        System.out.println("2. View All Students");
+        System.out.println("3. View Student by ID");
+        System.out.println("4. Update Student");
+        System.out.println("5. Delete Student");
+        System.out.println("6. Search Students by Name");
+        System.out.println("7. View Students by Grade");
+        System.out.println("8. View Top Students by GPA");
+        System.out.println("9. Display Statistics");
+        System.out.println("0. Exit");
+    }
+    
+    private void addStudent() throws StudentManagementException {
+        System.out.println("\n--- Add Student ---");
+        int id = getIntInput("Enter student ID: ");
+        String name = getStringInput("Enter student name: ");
+        int age = getIntInput("Enter student age: ");
+        String grade = getStringInput("Enter student grade: ");
+        double gpa = getDoubleInput("Enter student GPA: ");
+        
+        Student student = new Student(id, name, age, grade, gpa);
+        service.addStudent(student);
+    }
+    
+    private void viewAllStudents() {
+        System.out.println("\n--- All Students ---");
+        List<Student> students = service.getAllStudents();
+        if (students.isEmpty()) {
+            System.out.println("No students found.");
+        } else {
+            students.forEach(System.out::println);
+        }
+    }
+    
+    private void viewStudent() throws StudentManagementException {
+        System.out.println("\n--- View Student ---");
+        int id = getIntInput("Enter student ID: ");
+        Student student = service.getStudent(id);
+        System.out.println(student);
+    }
+    
+    private void updateStudent() throws StudentManagementException {
+        System.out.println("\n--- Update Student ---");
+        int id = getIntInput("Enter student ID to update: ");
+        String name = getStringInput("Enter new name: ");
+        int age = getIntInput("Enter new age: ");
+        String grade = getStringInput("Enter new grade: ");
+        double gpa = getDoubleInput("Enter new GPA: ");
+        
+        service.updateStudent(id, name, age, grade, gpa);
+    }
+    
+    private void deleteStudent() throws StudentManagementException {
+        System.out.println("\n--- Delete Student ---");
+        int id = getIntInput("Enter student ID to delete: ");
+        service.deleteStudent(id);
+    }
+    
+    private void searchStudents() {
+        System.out.println("\n--- Search Students ---");
+        String name = getStringInput("Enter name to search: ");
+        List<Student> results = service.searchStudentsByName(name);
+        if (results.isEmpty()) {
+            System.out.println("No students found matching: " + name);
+        } else {
+            results.forEach(System.out::println);
+        }
+    }
+    
+    private void viewStudentsByGrade() {
+        System.out.println("\n--- Students by Grade ---");
+        String grade = getStringInput("Enter grade: ");
+        List<Student> results = service.getStudentsByGrade(grade);
+        if (results.isEmpty()) {
+            System.out.println("No students found in grade: " + grade);
+        } else {
+            results.forEach(System.out::println);
+        }
+    }
+    
+    private void viewTopStudents() {
+        System.out.println("\n--- Top Students ---");
+        double minGpa = getDoubleInput("Enter minimum GPA: ");
+        List<Student> results = service.getTopStudents(minGpa);
+        if (results.isEmpty()) {
+            System.out.println("No students found with GPA >= " + minGpa);
+        } else {
+            results.forEach(System.out::println);
+        }
+    }
+    
+    // Utility methods for input
+    private String getStringInput(String prompt) {
+        System.out.print(prompt);
+        return scanner.nextLine().trim();
+    }
+    
+    private int getIntInput(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a valid integer.");
+            }
+        }
+    }
+    
+    private double getDoubleInput(String prompt) {
+        while (true) {
+            try {
+                System.out.print(prompt);
+                return Double.parseDouble(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        StudentManagementSystem system = new StudentManagementSystem();
+        system.start();
+    }
+}
