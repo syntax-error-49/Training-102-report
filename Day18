@@ -1,0 +1,118 @@
+
+## Day-18.md
+```markdown
+# Daily Diary - Day 18
+
+## HashMap & HashSet
+
+### Today's Topics
+- HashMap Internals and Hashing
+- HashSet Internals (uses HashMap)
+- Key-Value Pair Concept
+- hashCode() and equals() Contract
+- TreeMap and TreeSet
+
+### Practical Work
+- Created HashMap with different key types
+- Implemented custom objects as keys
+- Used HashSet for unique collections
+- Practiced with TreeMap for sorted maps
+
+### Code Example
+```java
+import java.util.*;
+
+// Custom class for demonstrating as Map key
+class Student {
+    private int id;
+    private String name;
+    
+    public Student(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+    
+    // Must override hashCode and equals for custom keys
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Student student = (Student) obj;
+        return id == student.id && Objects.equals(name, student.name);
+    }
+    
+    @Override
+    public String toString() {
+        return "Student{id=" + id + ", name='" + name + "'}";
+    }
+}
+
+public class MapSetDemo {
+    public static void main(String[] args) {
+        // HashMap example
+        Map<String, Integer> studentGrades = new HashMap<>();
+        
+        // Adding key-value pairs
+        studentGrades.put("Alice", 85);
+        studentGrades.put("Bob", 92);
+        studentGrades.put("Charlie", 78);
+        studentGrades.put("Alice", 90); // Overwrites previous value
+        
+        System.out.println("HashMap: " + studentGrades);
+        System.out.println("Alice's grade: " + studentGrades.get("Alice"));
+        System.out.println("Contains key Bob: " + studentGrades.containsKey("Bob"));
+        
+        // Iterating through HashMap
+        System.out.println("\nAll students and grades:");
+        for (Map.Entry<String, Integer> entry : studentGrades.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+        
+        // HashSet example
+        Set<String> uniqueNames = new HashSet<>();
+        uniqueNames.add("John");
+        uniqueNames.add("Jane");
+        uniqueNames.add("John"); // Duplicate, won't be added
+        uniqueNames.add("Doe");
+        
+        System.out.println("\nHashSet: " + uniqueNames);
+        System.out.println("Contains Jane: " + uniqueNames.contains("Jane"));
+        
+        // Custom object as key
+        Map<Student, String> studentCourses = new HashMap<>();
+        Student s1 = new Student(101, "Alice");
+        Student s2 = new Student(102, "Bob");
+        
+        studentCourses.put(s1, "Computer Science");
+        studentCourses.put(s2, "Mathematics");
+        
+        System.out.println("\nCustom key HashMap:");
+        for (Map.Entry<Student, String> entry : studentCourses.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
+        
+        // TreeMap example (sorted by keys)
+        TreeMap<String, Integer> sortedGrades = new TreeMap<>();
+        sortedGrades.put("Charlie", 78);
+        sortedGrades.put("Alice", 90);
+        sortedGrades.put("Bob", 92);
+        
+        System.out.println("\nTreeMap (sorted): " + sortedGrades);
+        
+        // TreeSet example (sorted)
+        TreeSet<Integer> sortedNumbers = new TreeSet<>();
+        sortedNumbers.add(50);
+        sortedNumbers.add(10);
+        sortedNumbers.add(30);
+        sortedNumbers.add(20);
+        
+        System.out.println("TreeSet (sorted): " + sortedNumbers);
+        System.out.println("First element: " + sortedNumbers.first());
+        System.out.println("Last element: " + sortedNumbers.last());
+    }
+}
