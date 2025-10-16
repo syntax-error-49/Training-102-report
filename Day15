@@ -1,0 +1,91 @@
+
+## Day-15.md
+```markdown
+# Daily Diary - Day 15
+
+## Exception Handling
+
+### Today's Topics
+- Exception Hierarchy
+- try-catch Blocks
+- Checked vs Unchecked Exceptions
+- Multiple Catch Blocks
+- finally Block
+- throw and throws
+
+### Practical Work
+- Implemented try-catch for various exceptions
+- Created custom exception classes
+- Used multiple catch blocks
+- Practiced with finally block
+- Threw exceptions manually
+
+### Code Example
+```java
+// Custom exception
+class InsufficientFundsException extends Exception {
+    public InsufficientFundsException(String message) {
+        super(message);
+    }
+}
+
+class BankAccount {
+    private double balance;
+    
+    public BankAccount(double balance) {
+        this.balance = balance;
+    }
+    
+    public void withdraw(double amount) throws InsufficientFundsException {
+        if (amount > balance) {
+            throw new InsufficientFundsException(
+                "Insufficient funds! Available: $" + balance + ", Requested: $" + amount
+            );
+        }
+        balance -= amount;
+        System.out.println("Withdrawn: $" + amount);
+    }
+}
+
+public class ExceptionHandlingDemo {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount(1000);
+        
+        // Example 1: ArithmeticException (unchecked)
+        try {
+            int result = 10 / 0; // This will throw ArithmeticException
+        } catch (ArithmeticException e) {
+            System.out.println("Cannot divide by zero: " + e.getMessage());
+        }
+        
+        // Example 2: ArrayIndexOutOfBoundsException (unchecked)
+        try {
+            int[] numbers = {1, 2, 3};
+            System.out.println(numbers[5]); // Invalid index
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid array index: " + e.getMessage());
+        }
+        
+        // Example 3: Multiple catch blocks
+        try {
+            String str = null;
+            System.out.println(str.length()); // NullPointerException
+        } catch (NullPointerException e) {
+            System.out.println("Null reference: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("General exception: " + e.getMessage());
+        }
+        
+        // Example 4: Checked exception
+        try {
+            account.withdraw(1500); // This will throw our custom exception
+        } catch (InsufficientFundsException e) {
+            System.out.println("Withdrawal failed: " + e.getMessage());
+        } finally {
+            System.out.println("Thank you for banking with us!");
+        }
+        
+        // Example 5: try-with-resources (Java 7+)
+        System.out.println("All operations completed.");
+    }
+}
