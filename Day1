@@ -1,0 +1,25 @@
+# Daily Diary - Day 01
+
+## Java Introduction & Setup
+
+### Today's Topics
+- What is Java?
+- JDK vs JRE vs JVM
+- Setting up Java Development Environment
+- Writing First Java Program
+- Understanding Basic Syntax
+
+### Practical Work
+- Installed JDK and configured environment variables
+- Set up IDE (VS Code/IntelliJ/Eclipse)
+- Created first "Hello World" program
+- Learned about main method structure
+- Understood compilation and execution process
+
+### Code Example
+```java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java World!");
+    }
+}
