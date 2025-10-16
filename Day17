@@ -1,0 +1,102 @@
+
+## Day-17.md
+```markdown
+# Daily Diary - Day 17
+
+## ArrayList & LinkedList
+
+### Today's Topics
+- ArrayList Internals and Performance
+- LinkedList Internals and Performance
+- When to use ArrayList vs LinkedList
+- Common Operations and Methods
+- Performance Comparison
+
+### Practical Work
+- Compared ArrayList and LinkedList performance
+- Implemented custom operations on both
+- Measured time for different operations
+- Built real-world usage examples
+
+### Code Example
+```java
+import java.util.*;
+
+public class ListComparison {
+    public static void main(String[] args) {
+        // ArrayList demonstration
+        List<Integer> arrayList = new ArrayList<>();
+        
+        // Adding elements
+        long startTime = System.nanoTime();
+        for (int i = 0; i < 100000; i++) {
+            arrayList.add(i); // Fast for adding at end
+        }
+        long endTime = System.nanoTime();
+        System.out.println("ArrayList add time: " + (endTime - startTime) + " ns");
+        
+        // Random access
+        startTime = System.nanoTime();
+        int element = arrayList.get(50000); // Very fast - O(1)
+        endTime = System.nanoTime();
+        System.out.println("ArrayList get time: " + (endTime - startTime) + " ns");
+        
+        // Insertion in middle
+        startTime = System.nanoTime();
+        arrayList.add(50000, 999); // Slow - needs shifting
+        endTime = System.nanoTime();
+        System.out.println("ArrayList insert middle time: " + (endTime - startTime) + " ns");
+        
+        // LinkedList demonstration
+        List<Integer> linkedList = new LinkedList<>();
+        
+        startTime = System.nanoTime();
+        for (int i = 0; i < 100000; i++) {
+            linkedList.add(i); // Fast for adding at end
+        }
+        endTime = System.nanoTime();
+        System.out.println("LinkedList add time: " + (endTime - startTime) + " ns");
+        
+        // Random access
+        startTime = System.nanoTime();
+        element = linkedList.get(50000); // Slow - O(n) traversal
+        endTime = System.nanoTime();
+        System.out.println("LinkedList get time: " + (endTime - startTime) + " ns");
+        
+        // Insertion in middle
+        startTime = System.nanoTime();
+        linkedList.add(50000, 999); // Fast - just link changes
+        endTime = System.nanoTime();
+        System.out.println("LinkedList insert middle time: " + (endTime - startTime) + " ns");
+        
+        // Practical examples
+        demonstrateRealWorldUsage();
+    }
+    
+    public static void demonstrateRealWorldUsage() {
+        System.out.println("\n--- Real World Examples ---");
+        
+        // Scenario 1: Frequent random access - Use ArrayList
+        List<String> studentNames = new ArrayList<>();
+        studentNames.add("Alice");
+        studentNames.add("Bob");
+        studentNames.add("Charlie");
+        
+        // Quick access to any student
+        System.out.println("Student at index 1: " + studentNames.get(1));
+        
+        // Scenario 2: Frequent insertions/deletions in middle - Use LinkedList
+        LinkedList<String> todoList = new LinkedList<>();
+        todoList.add("Buy groceries");
+        todoList.add("Finish homework");
+        todoList.add("Call mom");
+        
+        // Insert at specific position
+        todoList.add(1, "Check email");
+        System.out.println("Todo List: " + todoList);
+        
+        // Remove from middle
+        todoList.remove(2);
+        System.out.println("After removal: " + todoList);
+    }
+}
