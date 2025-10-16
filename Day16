@@ -1,0 +1,75 @@
+
+## Day-16.md
+```markdown
+# Daily Diary - Day 16
+
+## Collections Framework
+
+### Today's Topics
+- Collections Framework Hierarchy
+- List Interface (ArrayList, LinkedList)
+- Set Interface (HashSet, LinkedHashSet)
+- Iterators and Enhanced for loop
+- Generics in Collections
+
+### Practical Work
+- Practiced with ArrayList and LinkedList
+- Used HashSet for unique elements
+- Implemented iterator patterns
+- Used generics for type safety
+
+### Code Example
+```java
+import java.util.*;
+
+public class CollectionsDemo {
+    public static void main(String[] args) {
+        // ArrayList example
+        List<String> arrayList = new ArrayList<>();
+        arrayList.add("Apple");
+        arrayList.add("Banana");
+        arrayList.add("Orange");
+        arrayList.add("Apple"); // Duplicates allowed
+        
+        System.out.println("ArrayList: " + arrayList);
+        System.out.println("Size: " + arrayList.size());
+        System.out.println("Contains Banana: " + arrayList.contains("Banana"));
+        
+        // LinkedList example
+        List<Integer> linkedList = new LinkedList<>();
+        linkedList.add(10);
+        linkedList.add(20);
+        linkedList.add(30);
+        
+        System.out.println("LinkedList: " + linkedList);
+        
+        // HashSet example (no duplicates)
+        Set<String> hashSet = new HashSet<>();
+        hashSet.add("John");
+        hashSet.add("Jane");
+        hashSet.add("John"); // Duplicate, won't be added
+        hashSet.add("Doe");
+        
+        System.out.println("HashSet: " + hashSet);
+        System.out.println("Size: " + hashSet.size());
+        
+        // Iterating through collections
+        System.out.println("\nIterating with enhanced for loop:");
+        for (String fruit : arrayList) {
+            System.out.println(fruit);
+        }
+        
+        System.out.println("\nIterating with iterator:");
+        Iterator<String> iterator = hashSet.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+        
+        // Collections utility methods
+        Collections.sort(arrayList);
+        System.out.println("\nSorted ArrayList: " + arrayList);
+        
+        Collections.reverse(linkedList);
+        System.out.println("Reversed LinkedList: " + linkedList);
+    }
+}
