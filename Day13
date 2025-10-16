@@ -1,0 +1,94 @@
+
+## Day-13.md
+```markdown
+# Daily Diary - Day 13
+
+## Encapsulation & Access Modifiers
+
+### Today's Topics
+- Encapsulation Principle
+- Access Modifiers (public, private, protected, default)
+- Getters and Setters
+- Data Hiding
+- Bean Class Pattern
+
+### Practical Work
+- Created fully encapsulated classes
+- Implemented getters and setters
+- Used access modifiers appropriately
+- Built JavaBean compliant classes
+
+### Code Example
+```java
+// Fully encapsulated class
+class BankAccount {
+    // Private data members
+    private String accountNumber;
+    private String accountHolder;
+    private double balance;
+    private String password;
+    
+    // Public constructor
+    public BankAccount(String accountNumber, String accountHolder, double balance, String password) {
+        this.accountNumber = accountNumber;
+        this.accountHolder = accountHolder;
+        this.balance = balance;
+        this.password = password;
+    }
+    
+    // Public getters
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+    
+    public String getAccountHolder() {
+        return accountHolder;
+    }
+    
+    public double getBalance() {
+        return balance;
+    }
+    
+    // No direct setter for balance - controlled through methods
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposited: $" + amount);
+        } else {
+            System.out.println("Invalid deposit amount");
+        }
+    }
+    
+    public boolean withdraw(double amount, String inputPassword) {
+        if (!inputPassword.equals(password)) {
+            System.out.println("Invalid password!");
+            return false;
+        }
+        
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawn: $" + amount);
+            return true;
+        } else {
+            System.out.println("Insufficient balance or invalid amount");
+            return false;
+        }
+    }
+    
+    // No getter for password - security
+}
+
+public class EncapsulationDemo {
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount("123456", "John Doe", 1000.0, "secret123");
+        
+        // Can access via public methods only
+        System.out.println("Account Holder: " + account.getAccountHolder());
+        System.out.println("Balance: $" + account.getBalance());
+        
+        account.deposit(500.0);
+        account.withdraw(200.0, "secret123");
+        account.withdraw(2000.0, "secret123"); // Should fail
+        account.withdraw(100.0, "wrongpass");  // Should fail
+    }
+}
