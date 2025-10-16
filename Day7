@@ -1,0 +1,42 @@
+
+## Day-07.md
+```markdown
+# Daily Diary - Day 07
+
+## String Manipulation
+
+### Today's Topics
+- String class and its immutability
+- Common String methods
+- String comparison (== vs equals())
+- StringBuilder vs StringBuffer
+- String formatting
+
+### Practical Work
+- Practiced all major String methods
+- Implemented palindrome checker
+- Built string reversal program
+- Compared String, StringBuilder performance
+
+### Code Example
+```java
+public class StringDemo {
+    public static void main(String[] args) {
+        String str1 = "Hello";
+        String str2 = new String("Hello");
+        
+        // String methods
+        System.out.println("Length: " + str1.length());
+        System.out.println("Uppercase: " + str1.toUpperCase());
+        System.out.println("Substring: " + str1.substring(1, 4));
+        
+        // Comparison
+        System.out.println("== comparison: " + (str1 == str2));
+        System.out.println("equals comparison: " + str1.equals(str2));
+        
+        // StringBuilder
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hello").append(" ").append("World");
+        System.out.println(sb.toString());
+    }
+}
