@@ -1,0 +1,211 @@
+
+## Day-21.md
+```markdown
+# Daily Diary - Day 21
+
+## JDBC Introduction
+
+### Today's Topics
+- JDBC Architecture and Drivers
+- Database Connection Setup
+- Statement vs PreparedStatement
+- CRUD Operations (Create, Read, Update, Delete)
+- Connection Pooling Basics
+
+### Practical Work
+- Connected to MySQL database
+- Created database tables
+- Performed all CRUD operations
+- Used PreparedStatement for security
+- Handled database exceptions
+
+### Code Example
+```java
+import java.sql.*;
+import java.util.*;
+
+public class JDBCTutorial {
+    // Database configuration
+    private static final String URL = "jdbc:mysql://localhost:3306/javadb";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "password";
+    
+    public static void main(String[] args) {
+        // Create table first
+        createTable();
+        
+        // Perform CRUD operations
+        insertStudent("Alice Johnson", "alice@email.com", 22);
+        insertStudent("Bob Smith", "bob@email.com", 23);
+        insertStudent("Charlie Brown", "charlie@email.com", 21);
+        
+        // Read all students
+        System.out.println("All Students:");
+        readAllStudents();
+        
+        // Update student
+        updateStudent(1, "Alice Cooper", "alice.cooper@email.com", 23);
+        
+        // Read specific student
+        System.out.println("\nAfter Update:");
+        readStudentById(1);
+        
+        // Delete student
+        deleteStudent(3);
+        
+        System.out.println("\nAfter Deletion:");
+        readAllStudents();
+    }
+    
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+    }
+    
+    public static void createTable() {
+        String createTableSQL = """
+            CREATE TABLE IF NOT EXISTS students (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(100) NOT NULL,
+                email VARCHAR(100) UNIQUE NOT NULL,
+                age INT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """;
+        
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement()) {
+            
+            stmt.execute(createTableSQL);
+            System.out.println("Table created successfully!");
+            
+        } catch (SQLException e) {
+            System.out.println("Error creating table: " + e.getMessage());
+        }
+    }
+    
+    public static void insertStudent(String name, String email, int age) {
+        String insertSQL = "INSERT INTO students (name, email, age) VALUES (?, ?, ?)";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+            
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setInt(3, age);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("Inserted " + rowsAffected + " row(s)");
+            
+        } catch (SQLException e) {
+            System.out.println("Error inserting student: " + e.getMessage());
+        }
+    }
+    
+    public static void readAllStudents() {
+        String selectSQL = "SELECT * FROM students ORDER BY id";
+        
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(selectSQL)) {
+            
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                int age = rs.getInt("age");
+                Timestamp createdAt = rs.getTimestamp("created_at");
+                
+                System.out.printf("ID: %d, Name: %s, Email: %s, Age: %d, Created: %s%n",
+                                 id, name, email, age, createdAt);
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Error reading students: " + e.getMessage());
+        }
+    }
+    
+    public static void readStudentById(int studentId) {
+        String selectSQL = "SELECT * FROM students WHERE id = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(selectSQL)) {
+            
+            pstmt.setInt(1, studentId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                int age = rs.getInt("age");
+                
+                System.out.printf("Student found - Name: %s, Email: %s, Age: %d%n",
+                                 name, email, age);
+            } else {
+                System.out.println("Student not found with ID: " + studentId);
+            }
+            
+        } catch (SQLException e) {
+            System.out.println("Error reading student: " + e.getMessage());
+        }
+    }
+    
+    public static void updateStudent(int studentId, String name, String email, int age) {
+        String updateSQL = "UPDATE students SET name = ?, email = ?, age = ? WHERE id = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(updateSQL)) {
+            
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setInt(3, age);
+            pstmt.setInt(4, studentId);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("Updated " + rowsAffected + " row(s)");
+            
+        } catch (SQLException e) {
+            System.out.println("Error updating student: " + e.getMessage());
+        }
+    }
+    
+    public static void deleteStudent(int studentId) {
+        String deleteSQL = "DELETE FROM students WHERE id = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(deleteSQL)) {
+            
+            pstmt.setInt(1, studentId);
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("Deleted " + rowsAffected + " row(s)");
+            
+        } catch (SQLException e) {
+            System.out.println("Error deleting student: " + e.getMessage());
+        }
+    }
+    
+    // Additional utility method for batch insert
+    public static void batchInsertStudents(List<String[]> students) {
+        String insertSQL = "INSERT INTO students (name, email, age) VALUES (?, ?, ?)";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
+            
+            conn.setAutoCommit(false); // Start transaction
+            
+            for (String[] student : students) {
+                pstmt.setString(1, student[0]);
+                pstmt.setString(2, student[1]);
+                pstmt.setInt(3, Integer.parseInt(student[2]));
+                pstmt.addBatch();
+            }
+            
+            int[] results = pstmt.executeBatch();
+            conn.commit(); // Commit transaction
+            
+            System.out.println("Batch insert completed. Rows affected: " + Arrays.stream(results).sum());
+            
+        } catch (SQLException e) {
+            System.out.println("Error in batch insert: " + e.getMessage());
+        }
+    }
+}
