@@ -1,0 +1,86 @@
+
+## Day-14.md
+```markdown
+# Daily Diary - Day 14
+
+## Packages
+
+### Today's Topics
+- Package Creation and Structure
+- Import Statements
+- Classpath Configuration
+- Access Modifiers with Packages
+- Standard Java Packages
+
+### Practical Work
+- Created custom packages
+- Organized classes into packages
+- Used import statements
+- Practiced different import types
+- Worked with java.lang and util packages
+
+### Code Example
+```java
+// File: com/company/model/Employee.java
+package com.company.model;
+
+public class Employee {
+    private int id;
+    private String name;
+    private double salary;
+    
+    public Employee(int id, String name, double salary) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+    }
+    
+    // Getters and setters
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public double getSalary() { return salary; }
+    
+    public void setSalary(double salary) { 
+        this.salary = salary; 
+    }
+    
+    public void displayInfo() {
+        System.out.println("ID: " + id + ", Name: " + name + ", Salary: $" + salary);
+    }
+}
+
+// File: com/company/util/Calculator.java
+package com.company.util;
+
+public class Calculator {
+    public static double calculateBonus(double salary, double percentage) {
+        return salary * percentage / 100;
+    }
+}
+
+// File: com/company/Main.java
+package com.company;
+
+// Import statements
+import com.company.model.Employee;
+import com.company.util.Calculator;
+import java.util.ArrayList;  // Standard package import
+import java.util.Date;
+
+public class Main {
+    public static void main(String[] args) {
+        // Using classes from different packages
+        Employee emp = new Employee(101, "Alice Johnson", 50000);
+        emp.displayInfo();
+        
+        double bonus = Calculator.calculateBonus(emp.getSalary(), 10);
+        System.out.println("Bonus: $" + bonus);
+        
+        // Using standard Java packages
+        ArrayList<Employee> employees = new ArrayList<>();
+        employees.add(emp);
+        
+        Date today = new Date();
+        System.out.println("Today: " + today);
+    }
+}
