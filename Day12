@@ -1,0 +1,86 @@
+
+## Day-12.md
+```markdown
+# Daily Diary - Day 12
+
+## Abstraction & Interfaces
+
+### Today's Topics
+- Interface Definition
+- Implementing Interfaces
+- Multiple Inheritance through Interfaces
+- Default Methods in Interfaces
+- Static Methods in Interfaces
+
+### Practical Work
+- Created multiple interfaces
+- Implemented interfaces in classes
+- Used default and static methods
+- Practiced multiple interface implementation
+
+### Code Example
+```java
+// Interface definition
+interface Vehicle {
+    void start();   // abstract method
+    void stop();    // abstract method
+    
+    // Default method (Java 8+)
+    default void honk() {
+        System.out.println("Vehicle is honking!");
+    }
+    
+    // Static method
+    static int getMaxSpeed() {
+        return 200;
+    }
+}
+
+interface Electric {
+    void charge();
+    int getBatteryLevel();
+}
+
+// Class implementing multiple interfaces
+class ElectricCar implements Vehicle, Electric {
+    private String model;
+    private int batteryLevel;
+    
+    public ElectricCar(String model) {
+        this.model = model;
+        this.batteryLevel = 100;
+    }
+    
+    @Override
+    public void start() {
+        System.out.println(model + " is starting silently");
+    }
+    
+    @Override
+    public void stop() {
+        System.out.println(model + " is stopping");
+    }
+    
+    @Override
+    public void charge() {
+        batteryLevel = 100;
+        System.out.println(model + " is fully charged");
+    }
+    
+    @Override
+    public int getBatteryLevel() {
+        return batteryLevel;
+    }
+}
+
+public class InterfaceDemo {
+    public static void main(String[] args) {
+        ElectricCar car = new ElectricCar("Tesla Model 3");
+        car.start();
+        car.honk();  // default method
+        car.charge();
+        car.stop();
+        
+        System.out.println("Max speed: " + Vehicle.getMaxSpeed()); // static method
+    }
+}
