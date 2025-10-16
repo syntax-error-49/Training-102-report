@@ -1,0 +1,53 @@
+
+## Day-08.md
+```markdown
+# Daily Diary - Day 08
+
+## Object-Oriented Programming Basics
+
+### Today's Topics
+- Classes and Objects
+- Instance Variables vs Local Variables
+- Methods in Classes
+- Object Creation and Usage
+- Basic OOP Principles
+
+### Practical Work
+- Created multiple classes with attributes and methods
+- Instantiated objects and called methods
+- Implemented real-world entities as classes
+- Practiced encapsulation basics
+
+### Code Example
+```java
+// Class definition
+class Student {
+    // Instance variables
+    String name;
+    int age;
+    double marks;
+    
+    // Method
+    public void displayInfo() {
+        System.out.println("Name: " + name);
+        System.out.println("Age: " + age);
+        System.out.println("Marks: " + marks);
+    }
+    
+    public boolean isPassed() {
+        return marks >= 40;
+    }
+}
+
+public class OOPDemo {
+    public static void main(String[] args) {
+        // Object creation
+        Student student1 = new Student();
+        student1.name = "Alice";
+        student1.age = 20;
+        student1.marks = 85.5;
+        
+        student1.displayInfo();
+        System.out.println("Passed: " + student1.isPassed());
+    }
+}
