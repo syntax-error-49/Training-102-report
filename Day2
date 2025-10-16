@@ -1,0 +1,35 @@
+
+
+## Day-02.md
+```markdown
+# Daily Diary - Day 02
+
+## Data Types & Variables
+
+### Today's Topics
+- Primitive Data Types
+- Reference Data Types
+- Variable Declaration & Initialization
+- Type Casting
+- Constants (final keyword)
+
+### Practical Work
+- Practiced with all 8 primitive types
+- Performed type casting exercises
+- Used Scanner class for user input
+- Created multiple variable examples
+
+### Code Example
+```java
+public class DataTypesDemo {
+    public static void main(String[] args) {
+        int age = 25;
+        double salary = 50000.50;
+        char grade = 'A';
+        boolean isJavaFun = true;
+        
+        // Type casting
+        double d = 100.04;
+        int i = (int) d; // explicit casting
+    }
+}
