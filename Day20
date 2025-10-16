@@ -1,0 +1,184 @@
+
+## Day-20.md
+```markdown
+# Daily Diary - Day 20
+
+## Multithreading Basics
+
+### Today's Topics
+- Thread Concept and Lifecycle
+- Creating Threads (extends Thread vs implements Runnable)
+- Thread Methods (start(), run(), sleep(), join())
+- Thread States
+- Basic Synchronization
+
+### Practical Work
+- Created multiple threads using both approaches
+- Practiced thread synchronization
+- Implemented producer-consumer scenario
+- Used sleep and join methods
+
+### Code Example
+```java
+// Method 1: Extending Thread class
+class MyThread extends Thread {
+    private String threadName;
+    
+    public MyThread(String name) {
+        this.threadName = name;
+    }
+    
+    @Override
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            System.out.println(threadName + " - Count: " + i);
+            try {
+                Thread.sleep(1000); // Pause for 1 second
+            } catch (InterruptedException e) {
+                System.out.println(threadName + " interrupted.");
+            }
+        }
+        System.out.println(threadName + " finished.");
+    }
+}
+
+// Method 2: Implementing Runnable interface
+class MyRunnable implements Runnable {
+    private String threadName;
+    
+    public MyRunnable(String name) {
+        this.threadName = name;
+    }
+    
+    @Override
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            System.out.println(threadName + " - Count: " + i);
+            try {
+                Thread.sleep(500); // Pause for 0.5 second
+            } catch (InterruptedException e) {
+                System.out.println(threadName + " interrupted.");
+            }
+        }
+        System.out.println(threadName + " finished.");
+    }
+}
+
+// Shared resource with synchronization
+class Counter {
+    private int count = 0;
+    
+    // Synchronized method to prevent race conditions
+    public synchronized void increment() {
+        count++;
+    }
+    
+    public synchronized int getCount() {
+        return count;
+    }
+}
+
+class SynchronizedThread extends Thread {
+    private Counter counter;
+    
+    public SynchronizedThread(Counter counter) {
+        this.counter = counter;
+    }
+    
+    @Override
+    public void run() {
+        for (int i = 0; i < 1000; i++) {
+            counter.increment();
+        }
+    }
+}
+
+public class MultithreadingDemo {
+    public static void main(String[] args) {
+        System.out.println("Main thread started.");
+        
+        // Using Thread class extension
+        MyThread thread1 = new MyThread("Thread-1");
+        MyThread thread2 = new MyThread("Thread-2");
+        
+        // Using Runnable interface
+        Thread thread3 = new Thread(new MyRunnable("Runnable-1"));
+        Thread thread4 = new Thread(new MyRunnable("Runnable-2"));
+        
+        // Start threads
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        thread4.start();
+        
+        // Wait for threads to complete using join()
+        try {
+            thread1.join();
+            thread2.join();
+            thread3.join();
+            thread4.join();
+        } catch (InterruptedException e) {
+            System.out.println("Main thread interrupted.");
+        }
+        
+        // Demonstration of synchronization
+        demonstrateSynchronization();
+        
+        System.out.println("Main thread finished.");
+    }
+    
+    public static void demonstrateSynchronization() {
+        System.out.println("\n--- Synchronization Demo ---");
+        Counter counter = new Counter();
+        
+        // Create multiple threads that share the same counter
+        SynchronizedThread[] threads = new SynchronizedThread[5];
+        for (int i = 0; i < threads.length; i++) {
+            threads[i] = new SynchronizedThread(counter);
+            threads[i].start();
+        }
+        
+        // Wait for all threads to complete
+        for (SynchronizedThread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                System.out.println("Thread interrupted.");
+            }
+        }
+        
+        System.out.println("Final count (should be 5000): " + counter.getCount());
+        
+        // Thread states demonstration
+        demonstrateThreadStates();
+    }
+    
+    public static void demonstrateThreadStates() {
+        System.out.println("\n--- Thread States Demo ---");
+        
+        Thread stateThread = new Thread(() -> {
+            try {
+                System.out.println("Thread is going to sleep...");
+                Thread.sleep(2000);
+                System.out.println("Thread woke up!");
+            } catch (InterruptedException e) {
+                System.out.println("Thread interrupted during sleep.");
+            }
+        });
+        
+        System.out.println("Thread state after creation: " + stateThread.getState());
+        
+        stateThread.start();
+        System.out.println("Thread state after start: " + stateThread.getState());
+        
+        try {
+            Thread.sleep(1000);
+            System.out.println("Thread state during sleep: " + stateThread.getState());
+            
+            stateThread.join();
+            System.out.println("Thread state after completion: " + stateThread.getState());
+        } catch (InterruptedException e) {
+            System.out.println("Demo interrupted.");
+        }
+    }
+}
