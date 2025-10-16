@@ -1,0 +1,92 @@
+
+## Day-11.md
+```markdown
+# Daily Diary - Day 11
+
+## Polymorphism
+
+### Today's Topics
+- Polymorphism Concept
+- Method Overriding (Runtime Polymorphism)
+- Method Overloading (Compile-time Polymorphism)
+- Abstract Classes
+- Abstract Methods
+
+### Practical Work
+- Created abstract class hierarchies
+- Implemented method overriding examples
+- Practiced polymorphic method calls
+- Built real-world polymorphism scenarios
+
+### Code Example
+```java
+// Abstract class
+abstract class Shape {
+    String color;
+    
+    public Shape(String color) {
+        this.color = color;
+    }
+    
+    // Abstract method (no implementation)
+    abstract double area();
+    abstract void draw();
+    
+    // Concrete method
+    public void displayColor() {
+        System.out.println("Color: " + color);
+    }
+}
+
+class Circle extends Shape {
+    double radius;
+    
+    public Circle(String color, double radius) {
+        super(color);
+        this.radius = radius;
+    }
+    
+    @Override
+    double area() {
+        return Math.PI * radius * radius;
+    }
+    
+    @Override
+    void draw() {
+        System.out.println("Drawing Circle with radius " + radius);
+    }
+}
+
+class Rectangle extends Shape {
+    double length, width;
+    
+    public Rectangle(String color, double length, double width) {
+        super(color);
+        this.length = length;
+        this.width = width;
+    }
+    
+    @Override
+    double area() {
+        return length * width;
+    }
+    
+    @Override
+    void draw() {
+        System.out.println("Drawing Rectangle " + length + "x" + width);
+    }
+}
+
+public class PolymorphismDemo {
+    public static void main(String[] args) {
+        // Polymorphic reference
+        Shape shape1 = new Circle("Red", 5.0);
+        Shape shape2 = new Rectangle("Blue", 4.0, 6.0);
+        
+        shape1.draw();
+        System.out.println("Area: " + shape1.area());
+        
+        shape2.draw();
+        System.out.println("Area: " + shape2.area());
+    }
+}
